@@ -1,4 +1,7 @@
 import AppLayout from '@/layout/AppLayout.vue';
+import { useAuthStore } from '@/stores/auth';
+import FormulaView from '@/views/FormulaView.vue';
+import ServiceView from '@/views/ServiceView.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
@@ -7,12 +10,30 @@ const router = createRouter({
         {
             path: '/',
             component: AppLayout,
+            meta: { requiresAuth: true },
             children: [
                 {
                     path: '/',
                     name: 'dashboard',
-                    component: () => import('@/views/Dashboard.vue')
+                    component: () => import('@/views/Dashboard.vue'),
+                    
+                },{
+                    path: '/services',
+                    name: 'Services',
+                    component: () => import('@/views/ServiceView.vue'),
+                    meta: { requiresAuth: true }
+                  },
+                  {
+                    path: '/formulas',
+                    name: 'Formulas',
+                    component: () => import('@/views/FormulaView.vue'),
+                    meta: { requiresAuth: true }
                 },
+                  {
+                    path: '/add-subscriptions',
+                    name: 'Subcription',
+                    component: () => import('@/views/subscriptions/AddSubscription.vue'),
+                  },
                 {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
@@ -116,12 +137,13 @@ const router = createRouter({
             name: 'notfound',
             component: () => import('@/views/pages/NotFound.vue')
         },
-
+        
         {
             path: '/auth/login',
             name: 'login',
             component: () => import('@/views/pages/auth/Login.vue')
         },
+
         {
             path: '/auth/access',
             name: 'accessDenied',
@@ -134,5 +156,20 @@ const router = createRouter({
         }
     ]
 });
+
+router.beforeEach((to, from, next) => {
+
+    const authStore = useAuthStore();
+    authStore.checkAuth();
+    
+    const userRoles = authStore.user ? authStore.user.role : [];
+    if (to.meta.requiresAuth && !authStore.getAuth) {
+      next('/auth/login');
+    } else if (to.meta.roles && !to.meta.roles.some(role => userRoles.includes(role))) {
+      next('/auth/access');
+    } else {
+      next();
+    }
+  });
 
 export default router;

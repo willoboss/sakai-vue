@@ -5,6 +5,47 @@ import AppFooter from './AppFooter.vue';
 import AppSidebar from './AppSidebar.vue';
 import AppTopbar from './AppTopbar.vue';
 
+import { useAccountStore } from '@/stores/account';
+import { useAuthStore } from '@/stores/auth';
+import { onMounted } from "vue";
+
+const authStore = useAuthStore();
+const accountStore = useAccountStore();
+const searchQuery = ref('');
+const isModalOpen = ref(false);
+
+const accounts = computed(() => accountStore.getAccounts);
+
+const filteredAccounts = computed(() => {
+  if (!searchQuery.value) {
+    return [];
+  }
+  return accounts.value.filter(account =>
+    account.numberAccount.toString().includes(searchQuery.value)
+  );
+});
+
+const logout = () => {
+  authStore.logout();
+};
+
+const searchAccounts = () => {
+  if (searchQuery.value) {
+    isModalOpen.value = true;
+  } else {
+    isModalOpen.value = false;
+  }
+};
+
+onMounted(async () => {
+   authStore.checkAuth();
+  if (authStore.token) {
+    await accountStore.getAllAccounts(authStore.token);
+  }
+  console.log(accounts.value)
+  
+});
+
 const { layoutConfig, layoutState, isSidebarActive } = useLayout();
 
 const outsideClickListener = ref(null);

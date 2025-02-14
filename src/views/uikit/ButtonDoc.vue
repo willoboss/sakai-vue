@@ -26,7 +26,6 @@ function load(index) {
     setTimeout(() => (loading.value[index] = false), 1000);
 }
 </script>
-
 <template>
     <div class="flex flex-col md:flex-row gap-8">
         <div class="md:w-1/2">
