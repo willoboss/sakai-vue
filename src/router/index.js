@@ -16,7 +16,7 @@ const router = createRouter({
                     path: '/',
                     name: 'dashboard',
                     component: () => import('@/views/Dashboard.vue'),
-                    
+
                 },{
                     path: '/services',
                     name: 'Services',
@@ -31,8 +31,39 @@ const router = createRouter({
                 },
                   {
                     path: '/add-subscriptions',
-                    name: 'Subcription',
+                    name: 'Subscription',
                     component: () => import('@/views/subscriptions/AddSubscription.vue'),
+                    meta: { requiresAuth: true }
+                  },
+                  {
+                    path: '/listing-subscriptions',
+                    name: 'Listing Subscriptions',
+                    component: () => import('@/views/subscriptions/ListingSubscription.vue'),
+                    meta: { requiresAuth: true }
+                  },
+                  {
+                    path: '/listing-validation-subscriptions',
+                    name: 'Validation Subscriptions',
+                    component: () => import('@/views/subscriptions/ValidationSubscription.vue'),
+                    meta: { requiresAuth: true }
+                  },
+                  {
+                    path: '/listing-activation-subscriptions',
+                    name: 'Activation Subscriptions',
+                    component: () => import('@/views/subscriptions/ActivationSubscription.vue'),
+                    meta: { requiresAuth: true }
+                  },
+                  {
+                    path: '/listing-desactivation-subscriptions',
+                    name: 'Desactivation Subscriptions',
+                    component: () => import('@/views/subscriptions/DesactivationSubscription.vue'),
+                    meta: { requiresAuth: true }
+                  },
+                  {
+                    path: '/listing-termination-subscriptions',
+                    name: 'Termination Subscriptions',
+                    component: () => import('@/views/subscriptions/TerminationSubscription.vue'),
+                    meta: { requiresAuth: true }
                   },
                 {
                     path: '/uikit/formlayout',
@@ -137,7 +168,7 @@ const router = createRouter({
             name: 'notfound',
             component: () => import('@/views/pages/NotFound.vue')
         },
-        
+
         {
             path: '/auth/login',
             name: 'login',
@@ -161,7 +192,7 @@ router.beforeEach((to, from, next) => {
 
     const authStore = useAuthStore();
     authStore.checkAuth();
-    
+
     const userRoles = authStore.user ? authStore.user.role : [];
     if (to.meta.requiresAuth && !authStore.getAuth) {
       next('/auth/login');

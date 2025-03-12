@@ -8,18 +8,20 @@ export const useSubscriptionStore = defineStore('subscription', {
         subscriptionsTerminate: [],
         subscriptionsActivate: [],
         subscriptionsValidate: [],
-        subscriptionsDesactivate:[]
+        subscriptionsDesactivate:[],
+        subscriptions: []
     }),
     getters: {
         getSubscriptionsWaiting:(state)=>state.subscriptionsWaiting,
         getSubscriptionsTerminate: (state) => state.subscriptionsTerminate,
         getSubscriptionsActivate: (state) => state.subscriptionsActivate,
         getSubscriptionsVativate: (state) => state.subscriptionsValidate,
-        getSubscriptionsDesactivate:(state) => state.subscriptionsDesactivate
+        getSubscriptionsDesactivate:(state) => state.subscriptionsDesactivate,
+        getSubscriptions: (state) => state.subscriptions
     },
     actions: {
         async addSubscription(token, subscription) {
-    
+
             try {
                 const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/subscriptions/create`, subscription
                     , {
@@ -28,8 +30,6 @@ export const useSubscriptionStore = defineStore('subscription', {
                             "Authorization": `${token}`,
                         },
                     });
-                
-                
             } catch (error) {
                 console.error(error);
                 throw error;
@@ -115,7 +115,7 @@ export const useSubscriptionStore = defineStore('subscription', {
                     }
                 },)
 
-                this.subscriptionsWaiting = response.data
+                this.subscriptionsWaiting = response.data.reverse()
                 console.log(response.data)
             } catch (error) {
                 console.error(error);
@@ -133,7 +133,7 @@ export const useSubscriptionStore = defineStore('subscription', {
                     }
                 },)
 
-                this.subscriptionsValidate = response.data
+                this.subscriptionsValidate = response.data.reverse()
                 console.log(response.data)
             } catch (error) {
                 console.error(error);
@@ -151,7 +151,7 @@ export const useSubscriptionStore = defineStore('subscription', {
                     }
                 },)
 
-                this.subscriptionsActivate = response.data
+                this.subscriptionsActivate = response.data.reverse()
                 console.log(response.data)
             } catch (error) {
                 console.error(error);
@@ -169,7 +169,7 @@ export const useSubscriptionStore = defineStore('subscription', {
                     }
                 },)
 
-                this.subscriptionsDesactivate = response.data
+                this.subscriptionsDesactivate = response.data.reverse()
                 console.log(response.data)
             } catch (error) {
                 console.error(error);
@@ -178,6 +178,23 @@ export const useSubscriptionStore = defineStore('subscription', {
 
 
         },
+
+        async getAllSubscriptions(token) {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/subscriptions`, {
+                    headers: {
+                        Authorization: token,
+                        "Content-Type": "application/json",
+                    }
+                },)
+
+                this.subscriptions = response.data.reverse()
+                console.log(response.data)
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+        }
 
     },
 });

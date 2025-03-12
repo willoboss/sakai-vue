@@ -301,6 +301,8 @@
       msg.content
     }}</Message>
   </transition-group>
+
+  
 </template>
 
 <script setup>
@@ -361,7 +363,7 @@ const formulaUpdate = ref({
   amount: "",
   creditLimit: "",
   servicesId: [],
-  createdAt:"", 
+  createdAt:"",
   updateAt:""
 
 });
@@ -409,7 +411,7 @@ const resolver = zodResolver(
     })
     .refine((data) => data.amount <= data.creditLimit, {
       message: "Le montant ne peut pas dépasser le crédit limite.",
-      path: ["amount"], 
+      path: ["amount"],
     })
 );
 
@@ -486,7 +488,7 @@ function updateData(value) {
   formulaUpdate.value.services = value.servicesId.map((id) => getService(id));
 
   delete formulaUpdate.value.servicesId;
- 
+
   const index = formulaStore.getFormulas.findIndex(
     (formula) => formula.formulaId === value.formulaId
   );
@@ -564,7 +566,7 @@ function openUpdate(data) {
       selectLabel: `${service.code} - ${service.label}`,
     }));
 
-    
+
 
 
   console.log(formulaUpdate.value);
