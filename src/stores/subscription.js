@@ -15,7 +15,7 @@ export const useSubscriptionStore = defineStore('subscription', {
         getSubscriptionsWaiting:(state)=>state.subscriptionsWaiting,
         getSubscriptionsTerminate: (state) => state.subscriptionsTerminate,
         getSubscriptionsActivate: (state) => state.subscriptionsActivate,
-        getSubscriptionsVativate: (state) => state.subscriptionsValidate,
+        getSubscriptionsVatidate: (state) => state.subscriptionsValidate,
         getSubscriptionsDesactivate:(state) => state.subscriptionsDesactivate,
         getSubscriptions: (state) => state.subscriptions
     },
@@ -36,10 +36,10 @@ export const useSubscriptionStore = defineStore('subscription', {
             }
         },
 
-        async checkActivate(token, subscription, id) {
+        async checkActivateMultiple(token, subscriptions) {
 
             try {
-                const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/v1/subscriptions/activate/${id}`, subscription
+                const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/v1/subscriptions/activate`, subscriptions
                     , {
                         headers: {
                             "Content-Type": "application/json",
@@ -53,10 +53,10 @@ export const useSubscriptionStore = defineStore('subscription', {
             }
         },
 
-        async checkValidate(token, subscription,id) {
+        async checkValidate(token, subscriptions) {
 
             try {
-                const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/v1/subscriptions/validate/${id}`, subscription
+                const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/v1/subscriptions/validate`, subscriptions
                     , {
                         headers: {
                             "Content-Type": "application/json",
@@ -81,6 +81,23 @@ export const useSubscriptionStore = defineStore('subscription', {
                         },
                     });
                 this.findSubscriptionsActivate(token)
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+        },
+
+         async checkActivate(token, subscription, id) {
+
+            try {
+                const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/v1/subscriptions/activate/${id}`, subscription
+                    , {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `${token}`,
+                        },
+                    });
+                    
             } catch (error) {
                 console.error(error);
                 throw error;

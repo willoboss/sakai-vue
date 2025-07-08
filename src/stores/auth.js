@@ -46,11 +46,11 @@ export const useAuthStore = defineStore('auth', {
             router.push("/auth/login");
         },
         checkAuth() {
-            
-            const userCookie = Cookies.get('user'); 
+
+            const userCookie = Cookies.get('user');
             const tokenCookie = Cookies.get('token');
             if (userCookie && tokenCookie) {
-                
+
                 this.user = JSON.parse(userCookie);
                 this.token = tokenCookie;
                 this.isAuthenticated = true;

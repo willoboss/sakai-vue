@@ -121,28 +121,6 @@ onMounted(async () => {
     }
 });
 
-const addSubcription = async () => {
-    try {
-        subscription.value.accountId = account.value.accountId;
-        console.log(subscription.value);
-        await subscriptionStore.addSubscription(authStore.token, subscription.value);
-        alertSuccess('abonnement effectué en attente de validation!');
-        loadingData.value = true;
-        await subscriptionStore.findSubscriptionsWaiting(authStore.token);
-
-    if (subscriptionsWaiting.value.length > subscriptionData.value.length) {
-      loadSubscription(subscriptionsWaiting.value);
-    } else {
-      console.warn("Aucun abonnement en attente trouvé.");
-    }
-        console.log('Subscriptions Waiting:', subscriptionsWaiting.value);
-        closeCustomer();
-    } catch (error) {
-        console.error('Erreur lors de l\'abonnement :', error);
-        showError('Erreur lors de l\'abonnement. Veuillez réessayer.');
-    }
-};
-
 const getAccount = async (value) => {
     try {
         load();
@@ -265,6 +243,7 @@ const subscribeAdd = async (value) => {
         await subscriptionStore.addSubscription(authStore.token, value);
 
         showSuccess(' Abonnement effectué');
+        window.location.reload();
         closeCustomer();
 
     } catch (error) {
@@ -361,7 +340,7 @@ function load() {
                     v-model:filters="filters"
                     :value="subscriptionData"
                     paginator
-                    :rows="10"
+                    :rows="5"
                     dataKey="subscriptionId"
                     filterDisplay="row"
                     :loading="loadingData"
